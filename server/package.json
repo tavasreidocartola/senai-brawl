@@ -1,0 +1,17 @@
+{
+  "name": "senai-brawl-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Authoritative WebSocket game server for SENAI BRAWL",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "check": "node --check index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}

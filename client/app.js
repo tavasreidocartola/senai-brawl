@@ -75,6 +75,7 @@
     openSocket(() => send({type:"join",code,name:$("playerName").value.trim()||"Jogador",characterId:selectedCharacter}));
   }
   function handleMessage(data) {
+    if (data.mode && modes[data.mode]) selectedMode = data.mode;
     if (data.type === "error") return toast(data.message || "Ocorreu um erro.");
     if (data.type === "created" || data.type === "joined") {
       roomCode = data.room; playerId = data.playerId; isHost = data.type === "created";
@@ -179,7 +180,7 @@
   $("readyBtn").addEventListener("click",()=>send({type:"ready"}));
   $("startBtn").addEventListener("click",()=>send({type:"start"}));
   $("copyCodeBtn").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(roomCode);toast("Código copiado!");}catch{toast("Código da sala: "+roomCode);}});
-  $("backToLobby").addEventListener("click",()=>{showHome();toast("A partida foi escondida. Para sair da sala, recarregue a página.");});
+  $("backToLobby").addEventListener("click",()=>{send({type:"leave"});roomCode="";playerId="";isHost=false;latestPlayers=[];$("roomActive").classList.add("hidden");$("roomEmpty").classList.remove("hidden");showHome();toast("Você saiu da sala.");});
   $("resultsMenuBtn").addEventListener("click",showHome);
   $("rematchBtn").addEventListener("click",()=>send({type:"rematch"}));
   $("hyperBtn").addEventListener("click",()=>{hyperPressed=true;sendInput();});

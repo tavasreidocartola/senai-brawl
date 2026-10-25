@@ -1,4 +1,6 @@
 const http = require("node:http");
+const fs = require("node:fs");
+const path = require("node:path");
 const crypto = require("node:crypto");
 const { WebSocketServer, WebSocket } = require("ws");
 
@@ -266,9 +268,32 @@ function updateRoom(room, now) {
     sendRoom(room, "state", { width: WIDTH, height: HEIGHT, entities: room.entities, gems: room.gems, ball: room.ball, score: room.score, timeLeft: Math.max(0, 180 - Math.floor((now - room.startedAt) / 1000)), players: [...room.players.values()].map(publicPlayer) });
   }
 }
+const CLIENT_DIR = path.join(__dirname, "..", "client");
+const MIME_TYPES = {
+  ".html": "text/html; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".js": "application/javascript; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".ico": "image/x-icon"
+};
 const server = http.createServer((req, res) => {
-  if (req.url === "/health") { res.writeHead(200, { "content-type": "application/json" }); return res.end(JSON.stringify({ ok: true, rooms: rooms.size })); }
-  res.writeHead(200, { "content-type": "text/plain; charset=utf-8" }); res.end("SENAI BRAWL WebSocket server online. Health: /health");
+  const pathname = new URL(req.url, "http://localhost").pathname;
+  if (pathname === "/health") {
+    res.writeHead(200, { "content-type": "application/json" });
+    return res.end(JSON.stringify({ ok: true, rooms: rooms.size }));
+  }
+  const requestedPath = pathname === "/" ? "/index.html" : decodeURIComponent(pathname);
+  const filePath = path.resolve(CLIENT_DIR, "." + requestedPath);
+  if (!filePath.startsWith(CLIENT_DIR + path.sep) && filePath !== path.join(CLIENT_DIR, "index.html")) {
+    res.writeHead(403); return res.end("Forbidden");
+  }
+  fs.readFile(filePath, (err, data) => {
+    if (err) { res.writeHead(404, { "content-type": "text/plain; charset=utf-8" }); return res.end("Not found"); }
+    res.writeHead(200, { "content-type": MIME_TYPES[path.extname(filePath)] || "application/octet-stream", "x-content-type-options": "nosniff" });
+    res.end(data);
+  });
 });
 const wss = new WebSocketServer({ server, maxPayload: 16 * 1024 });
 wss.on("connection", ws => {

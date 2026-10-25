@@ -11,9 +11,9 @@ services:
       - key: NODE_VERSION
         value: 20
 
-  - type: web
+  - type: static
     name: senai-brawl
-    runtime: static
+    plan: free
     buildCommand: ""
     staticPublishPath: ./client
     headers:

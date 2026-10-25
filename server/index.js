@@ -155,7 +155,7 @@ function doAttack(room, p, now) {
 function hurt(room, attacker, target, damage) {
   if (!target.alive || target.invulnerableUntil > Date.now()) return;
   target.hp -= damage;
-  if (attacker && attacker.id !== target.id) attacker.super = Math.min(100, attacker.super + 12);
+  if (attacker && attacker.id !== target.id) { attacker.super = Math.min(100, attacker.super + 12); attacker.hyper = Math.min(100, attacker.hyper + 14); }
   if (target.hp <= 0) {
     target.hp = 0; target.alive = false; target.respawnAt = Date.now() + 2400;
     if (attacker && attacker.id !== target.id) attacker.kills++;
@@ -220,7 +220,6 @@ function updateRoom(room, now) {
     p.y = Math.max(30, Math.min(HEIGHT - 30, p.y + dy / mag * p.speed * boost * TICK_MS / 1000));
     if (p.hyperActiveUntil && now >= p.hyperActiveUntil) p.hyperActiveUntil = 0;
     doAttack(room, p, now);
-    if (p.hyperActiveUntil > now) p.hyper = Math.min(100, p.hyper + 0.06);
   }
   for (const e of [...room.entities]) {
     e.x += e.vx * TICK_MS / 1000; e.y += e.vy * TICK_MS / 1000;

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1022">
+  <title>SENAI BRAWL</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="SENAI BRAWL início"><span class="brand-mark">SB</span><span>SENAI <b>BRAWL</b><small>ARENA DA TURMA</small></span></a>
+      <div class="top-actions"><span id="connection" class="connection"><i></i> Desconectado</span><button id="serverBtn" class="button ghost small">Servidor</button></div>
+    </header>
+
+    <main>
+      <section id="homeScreen" class="screen home-screen">
+        <div class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="pulse"></span> A ARENA TÁ ABERTA</span>
+            <h1>ENTRA NA<br><span>BRIGA.</span></h1>
+            <p>Escolhe teu personagem, chama a galera e resolve isso na arena. Sem conta, sem enrolação.</p>
+            <div class="hero-stats"><div><b>11</b><span>PERSONAGENS</span></div><div><b>3</b><span>MODOS</span></div><div><b>10</b><span>JOGADORES</span></div></div>
+          </div>
+          <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="hero-star">✦</div><div class="hero-character">SB<span>!</span></div><div class="mini-tag tag-a">WASD</div><div class="mini-tag tag-b">SUPER!</div><div class="mini-tag tag-c">GG EZ?</div></div>
+        </div>
+        <div class="lobby-grid">
+          <section class="panel setup-panel">
+            <div class="section-head"><div><span class="eyebrow">01 / PREPARAÇÃO</span><h2>MONTA A PARTIDA</h2></div><span class="step-dot">01</span></div>
+            <label class="field-label" for="playerName">TEU NOME</label>
+            <input id="playerName" class="text-input" maxlength="18" value="Tavares" placeholder="Como vão te chamar?">
+            <label class="field-label">MODO DE JOGO</label>
+            <div class="mode-options">
+              <button class="mode-card selected" data-mode="gemas"><span class="mode-icon purple">◆</span><b>PIQUE-GEMA</b><small>Junta 5 gemas</small></button>
+              <button class="mode-card" data-mode="fute"><span class="mode-icon green">⚽</span><b>FUTE-BRAWL</b><small>Faz 3 gols</small></button>
+              <button class="mode-card" data-mode="combate"><span class="mode-icon orange">✹</span><b>COMBATE</b><small>Último em pé</small></button>
+            </div>
+            <label class="field-label">TEU PERSONAGEM</label>
+            <div id="characterGrid" class="character-grid"></div>
+            <div id="selectedCharacter" class="selected-character"><span class="avatar">T</span><div><b>Tavares</b><small>Destruidor · Ricochete</small></div><span class="ready-pill">LIBERADO</span></div>
+            <label class="toggle-row"><span><b>Adicionar bots</b><small>Preenche a partida com adversários controlados pelo jogo.</small></span><input id="botsToggle" type="checkbox" checked><span class="toggle"></span></label>
+            <div class="action-row"><button id="createBtn" class="button primary">CRIAR SALA <span>↗</span></button><div class="or">OU</div><button id="joinToggle" class="button secondary">ENTRAR COM CÓDIGO</button></div>
+            <div id="joinForm" class="join-form hidden"><input id="roomCode" class="text-input code-input" maxlength="5" placeholder="CÓDIGO" autocomplete="off"><button id="joinBtn" class="button secondary">ENTRAR</button></div>
+          </section>
+          <aside class="side-column">
+            <section class="panel room-panel">
+              <span class="eyebrow">02 / TEU GRUPO</span><h2>SALA DE JOGO</h2>
+              <div class="room-empty" id="roomEmpty"><div class="room-icon">⌘</div><b>Nenhuma sala ainda</b><p>Cria uma sala e manda o código pra tua equipe.</p></div>
+              <div class="room-active hidden" id="roomActive"><span class="field-label">CÓDIGO DA SALA</span><div class="room-code-line"><strong id="roomCodeDisplay">-----</strong><button id="copyCodeBtn" class="button ghost small">COPIAR</button></div><div id="playersList" class="players-list"></div><div class="room-buttons"><button id="readyBtn" class="button secondary">ESTOU PRONTO</button><button id="startBtn" class="button primary">COMEÇAR ↗</button></div></div>
+            </section>
+            <section class="panel controls-panel"><span class="eyebrow">03 / CONTROLES</span><h2>DOMINA A ARENA</h2><div class="control-list"><div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>Mover</span></div><div><span class="mouse-icon">↖</span><span>Mira</span></div><div><kbd>CLIQUE ESQ.</kbd><span>Ataque básico</span></div><div><kbd>CLIQUE DIR.</kbd><span>Super</span></div><div><kbd>E</kbd><span>Ativar Hipercarga</span></div><div><kbd>ESC</kbd><span>Menu</span></div></div></section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen hidden">
+        <div class="game-top"><button id="backToLobby" class="button ghost small">← MENU</button><div class="match-title"><span class="live-dot"></span><b id="matchMode">PIQUE-GEMA</b><small id="matchTime">03:00</small></div><div class="scoreboard" id="scoreboard"><span class="blue-score">AZUL 0</span><span class="score-divider">:</span><span class="red-score">0 VERMELHO</span></div></div>
+        <div class="arena-wrap"><canvas id="arena" width="1000" height="620" aria-label="Arena de jogo"></canvas><div id="gameToast" class="game-toast hidden"></div><div class="arena-hint" id="arenaHint">WASD mover · Mouse mirar · Clique para atacar</div></div>
+        <div class="game-bottom"><div class="hud-player"><div class="hud-avatar" id="hudAvatar">T</div><div class="hud-name"><b id="hudName">Tavares</b><div class="health-track"><span id="healthBar"></span></div><small id="healthText">7300 / 7300 HP</small></div></div><div class="ability-group"><div class="ability"><div class="ability-icon basic">✦</div><div><b>ATAQUE</b><small>CLIQUE ESQ.</small></div></div><div class="ability"><div class="ability-icon super" id="superIcon">✹</div><div><b>SUPER <span id="superPercent">0%</span></b><div class="meter"><span id="superBar"></span></div><small>CLIQUE DIR.</small></div></div><button id="hyperBtn" class="hyper-button"><span>⚡</span><b>HIPERCARGA <i id="hyperPercent">0%</i></b><small>TECLA E</small><div class="meter"><span id="hyperBar"></span></div></button></div></div>
+        <div id="resultsOverlay" class="results-overlay hidden"><div class="results-card"><span class="eyebrow">FIM DE JOGO</span><h2 id="winnerTitle">VITÓRIA!</h2><p id="resultText">A arena decidiu.</p><button id="rematchBtn" class="button primary">JOGAR DE NOVO ↗</button><button id="resultsMenuBtn" class="button secondary">VOLTAR AO MENU</button></div></div>
+      </section>
+    </main>
+    <footer><span>© SENAI BRAWL · FEITO PRA JOGAR COM A TURMA</span><span>VERSÃO 0.1 · PROTÓTIPO</span></footer>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+  <dialog id="serverDialog" class="server-dialog"><form method="dialog"><button class="dialog-close" aria-label="Fechar">×</button></form><span class="eyebrow">CONFIGURAÇÃO</span><h2>ENDEREÇO DO SERVIDOR</h2><p>Use o endereço WebSocket do servidor publicado. Para jogar localmente, use <code>ws://localhost:3001</code>.</p><label class="field-label" for="serverUrl">URL WS / WSS</label><input id="serverUrl" class="text-input" placeholder="wss://seu-servidor.onrender.com"><button id="saveServerBtn" class="button primary">SALVAR SERVIDOR</button></dialog>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: senai-brawl-server
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+
+  - type: web
+    name: senai-brawl
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: ./client
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff

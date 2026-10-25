@@ -22,7 +22,8 @@
     let value = localStorage.getItem(SERVER_KEY);
     if (value) return value;
     const isLocal = ["localhost","127.0.0.1"].includes(location.hostname);
-    return isLocal ? "ws://localhost:3001" : "";
+    if (isLocal) return "ws://localhost:3001";
+    return (location.protocol === "https:" ? "wss://" : "ws://") + location.host;
   }
   function toast(message) {
     const el = $("toast"); el.textContent = message; el.classList.remove("hidden");
